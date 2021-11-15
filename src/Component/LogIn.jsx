@@ -2,8 +2,12 @@ import React,{useState,useEffect} from 'react'
 import {Link,useHistory} from 'react-router-dom'
 import axios from 'axios'
 function LogIn({setLogInUser,LogInData,setLogInData}) {
+  localStorage.clear()
+  
   let history=useHistory()
-   
+  //  const [LogInData,setLogInUser]=useState({
+  //    emal:
+  //  })
    const handle=(e)=>{
      setLogInData({...LogInData,[e.target.name]:e.target.value})
    } 
@@ -18,7 +22,7 @@ function LogIn({setLogInUser,LogInData,setLogInData}) {
       alert(res.data.messages)
       setLogInUser(res.data.user)
       localStorage.setItem('LogInUser',JSON.stringify(res.data.user))
-      localStorage.setItem('Token',123)
+      localStorage.setItem('Token',res.data.token)
          history.push("/")
     })  
 

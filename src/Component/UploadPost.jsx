@@ -1,6 +1,20 @@
 import React from 'react'
-
+import UploadPostContent from './UploadPostContent'
+import {useState} from 'react'
+import {Link} from 'react-router-dom'
 function UploadPost() {
+ var trigger=false
+const [buttonpopup,setbuttonpopup]=useState(false)
+
+const handleChange=()=>{
+          if(buttonpopup)
+          {
+            setbuttonpopup(false)
+          }
+          else{
+            setbuttonpopup(true)
+          }
+}
   return (
     <>
         <div className="rght_btn">
@@ -11,7 +25,15 @@ function UploadPost() {
   <span className="btn_sep">
     <img src="images/btn_sep.png" alt="sep" />
   </span>{" "}
-  <a href="#">Upload Post</a>{" "}
+  
+  <a onClick={handleChange}>Upload Post</a>{" "}
+
+  {
+  (buttonpopup)?<UploadPostContent />:null
+  }
+  
+     
+  
 </div>
 <div className="rght_btn">
   {" "}

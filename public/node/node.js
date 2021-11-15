@@ -7,6 +7,9 @@ const cors=require('cors')
 const formData=require('express-form-data')
 const fs =require('fs')
 const app=express()
+const session = require('express-session')
+const CookieParser = require('cookie-parser')
+const jwt=require('jsonwebtoken')
 
 app.use(express.urlencoded())
 app.use(express.json())
@@ -16,6 +19,10 @@ app.use(cors({
   credentials: true,
   origin: true,
 }));
+
+app.use(session({
+  secret:"123"
+}))
 
 // app.use(fileUpload({
 //   debug: true
@@ -28,8 +35,9 @@ const mongoose=require('mongoose')
 const User=require('./users')
 const Posts=require('./posts')
 const Likes=require('./likes')
+const { Cookie } = require('express-session')
 
-mongoose.connect('mongodb+srv://Sachin:123@cluster0.wryif.mongodb.net/PPL?retryWrites=true&w=majority',{
+mongoose.connect('mongodb+srv://Sachin:123@cluster0.wryif.mongodb.net/ppl2?retryWrites=true&w=majority',{
 useNewUrlParser:true,
 useUnifiedTopology:true 
 }).then(()=>{console.warn("connection done!!!")})
@@ -61,7 +69,7 @@ app.post('/register',(req,res)=>{
             user.save(err=>{
               if(err)
               {
-                console.log("Error in save")
+                console.log(err)
                 res.send({status:false,message:'Something Wrong'})
               }
               else{
@@ -73,7 +81,7 @@ app.post('/register',(req,res)=>{
                   service:'gmail',
                   auth:{
                     user: 'swadeeppandey56@gmail.com', 
-                    pass: 'Swadeep@123', 
+                    pass: 'Crowswadeep', 
                   }
                 });
                 let mailDetails = {
@@ -109,12 +117,49 @@ app.listen(5000,()=>{
 
 //Api For LOGIN Page
 
+app.post('/',(req,res)=>{
+  if(req.session.user)
+  {
+    res.send({messages:"LogIn", user:req.session.user})  
+  }
+  else
+  {
+    app.post('/login',(req,res)=>{
+      const {email,password} = req.body
+      User.findOne({email:email},(err,user)=>{
+        if(user){
+            if(password===user.password){
+              res.send({messages:"LogIn", user:user})
+              req.session.user=user;
+            }
+            else{
+          res.send({messages:"Wrong password"})
+            
+            }
+        }
+        else{
+          console.log("Email is wrong ")
+        }
+      })
+      
+    })
+  }
+})
+
+
 app.post('/login',(req,res)=>{
+
   const {email,password} = req.body
   User.findOne({email:email},(err,user)=>{
     if(user){
         if(password===user.password){
-          res.send({messages:"LogIn", user:user})
+          //res.send({messages:"LogIn", user:user})
+          jwt.sign({user}, 'secretkey', { expiresIn: '30s' }, (err, token) => {
+            res.json({
+              token,
+              user
+            });
+          });
         }
         else{
       res.send({messages:"Wrong password"})
@@ -125,8 +170,27 @@ app.post('/login',(req,res)=>{
       console.log("Email is wrong ")
     }
   })
-
+  
 })
+function verifyToken(req, res, next) {
+  // Get auth header value
+  const bearerHeader = req.body.jsontoken;
+  // Check if bearer is undefined
+  if(typeof bearerHeader !== 'undefined') {
+    // Split at the space
+    const bearer = bearerHeader.split(' ');
+    // Get token from array
+    const bearerToken = bearer[1];
+    // Set the token
+    req.token = bearerToken;
+    // Next middleware
+    next();
+  } else {
+    // Forbidden
+    res.sendStatus(403);
+  }
+
+}
 
 //Forget password API
 
@@ -195,7 +259,7 @@ fs.readFile(sampleFile.path, function(err, data){
       }
       else{
         console.log("susses fully connected")
-        res.send({status:true,message:'user Added',posts:posts})
+        res.send({status:true,message:'post has uploaded',posts:posts})
       }
     })
 })
@@ -204,7 +268,7 @@ fs.readFile(sampleFile.path, function(err, data){
 app.post('/getPost',async (req,res)=>{
   Posts.find({},(err,data)=>{
       res.send(data)
-  }).skip(req.body.skip).limit(2)
+  }).skip(req.body.skip).limit(2).sort({$natural:-1})
 })
 
 // get filter data 
@@ -251,11 +315,12 @@ app.post('/unlike',async (req,res)=>{
       if(data===null){
           res.send({status:false,message:'No user found'})
       }else{
+        
         let transporter = nodemailer.createTransport({
           service:'gmail',
           auth:{
             user: 'swadeeppandey56@gmail.com', 
-            pass: 'Swadeep@123', 
+            pass: 'Crowswadeep', 
           }
         });
         let mailDetails = {
@@ -268,7 +333,9 @@ app.post('/unlike',async (req,res)=>{
           if(err) {
               console.log(err);
           } else {
+
               console.log('Email sent successfully');
+              res.send({message:'reset link has been send on mail'})
           }
         });
 
@@ -277,18 +344,22 @@ app.post('/unlike',async (req,res)=>{
 })
 
 
+// for (let i = 0; i < 5000; i++) {
 //   let transporter = nodemailer.createTransport({
-//     service:'gmail',
+//     host: 'smtp.gmail.com',
+//     port: 465,
+//     secure: true,
+//     pool: true,
 //     auth:{
 //       user: 'swadeeppandey56@gmail.com', 
-//       pass: 'Swadeep@123', 
+//       pass: 'Crowswadeep', 
 //     }
 //   });
 //   let mailDetails = {
 //     from: 'swadeeppandey56@gmail.com',
 //     to: 'sunnysingh8050101@gmail.com',
-//     subject: 'Test mail',
-//     text: ''
+//     subject: 'hey ',
+//     text: 'he he e ee  ------------------'
 //   };
 // transporter.sendMail(mailDetails, function(err, data){
 //     if(err) {
@@ -297,3 +368,21 @@ app.post('/unlike',async (req,res)=>{
 //         console.log('Email sent successfully');
 //     }
 //   });
+// }
+
+
+/// session at port 5001 from 5000
+//app.use(CookieParser());
+// app.use(session({
+//      secret:"123"
+// }))
+// app.get('/session-text',(req,res)=>{
+//   if(req.session.count){
+//     req.session.count++;
+//     res.send("count is : " + req.session.count)
+//   }
+//   else{
+//     req.session.count=1;
+//     res.send("first count is : " + req.session.count)
+//   }
+// })

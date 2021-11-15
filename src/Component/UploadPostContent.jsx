@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { useState } from 'react'
 import axios from 'axios'
-import './uploadpostcontent.css'
+import './Uploadpostcontent.css'
 function UploadPostContent() {
   const userId = JSON.parse(localStorage.getItem('LogInUser'))._id
   const [postData, setpostData] = useState({
@@ -27,7 +27,7 @@ function UploadPostContent() {
       config: { headers: { 'Content-Type': 'multipart/form-data' } },
     }).then((res) => {
       if (res.data.status) {
-        console.log('added')
+          alert(res.data.message)
       } else {
         console.log('not aded')
       }
@@ -36,11 +36,11 @@ function UploadPostContent() {
 
   return (
     <>
-      <form onSubmit={submit}>
+      <form onSubmit={submit}  style={{"font-size": '15px'},{'color':'white'}}>
         <lable>Title</lable>
-        <input type="text" name="title" onChange={handle} /> <br/>
+        <input  style={{ 'margin': '19px 0 21px 40px'}}  type="text" name="title" onChange={handle} /> <br/>
         <lable>Category</lable>
-        <select name="category" onChange={handle}>
+        <select  style={{'margin': '0 0 0 5px'}} name="category" onChange={handle}>
           <option value="Cat" selected>
             Cat
           </option>
@@ -52,7 +52,7 @@ function UploadPostContent() {
         <lable>Chose Photos</lable>
         <input type="file" name="image" onChange={handle} />
         <br/>
-        <input type="submit" />
+        <input className="btn btn-success" style={{'margin': '27px 6px 12px 4px'}}  type="submit" />
       </form>
     </>
   )

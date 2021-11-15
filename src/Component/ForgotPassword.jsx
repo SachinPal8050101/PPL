@@ -16,13 +16,13 @@ function ForgotPassword() {
       data: {forgotEmail:forgotEmail,location:location},
       withCredentials: true,
       url: 'http://localhost:5000/forgotEmail',
-    }).then((res) => {
-      
+    }).then((res) => { 
       if (res.data.status){
+       
         console.log(res.data.data._id)
         history.push(`/resetPassword/${res.data.data._id}`)
       } else {
-           alert("This Mail is not regitered")
+           alert("link has been send to your mail id")
       }
     })
   }
