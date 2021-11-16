@@ -14,7 +14,6 @@ const jwt=require('jsonwebtoken')
 app.use(express.urlencoded())
 app.use(express.json())
 
-
 app.use(cors({
   credentials: true,
   origin: true,
@@ -81,7 +80,7 @@ app.post('/register',(req,res)=>{
                   service:'gmail',
                   auth:{
                     user: 'swadeeppandey56@gmail.com', 
-                    pass: 'Crowswadeep', 
+                    pass: '', 
                   }
                 });
                 let mailDetails = {
@@ -320,7 +319,7 @@ app.post('/unlike',async (req,res)=>{
           service:'gmail',
           auth:{
             user: 'swadeeppandey56@gmail.com', 
-            pass: 'Crowswadeep', 
+            pass: '', 
           }
         });
         let mailDetails = {
