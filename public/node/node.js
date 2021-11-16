@@ -165,7 +165,7 @@ app.post('/login',(req,res)=>{
     if(user){
         if(password===user.password){
           //res.send({messages:"LogIn", user:user})
-          jwt.sign({user}, 'secretkey', { expiresIn: '5s' }, (err, token) => {
+          jwt.sign({user}, 'secretkey', { expiresIn: '60s' }, (err, token) => {
             res.json({
               token,
               user
