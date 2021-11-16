@@ -13,6 +13,14 @@ function Home(props) {
     method:"post",
     data:{'token':localStorage.getItem('Token')},
     url:'http://localhost:5000/'
+  }).then((res)=>{
+    if(!res.data.status)
+    {
+      history.push('/login')
+      console.log(res.data.status)
+      localStorage.clear()
+      
+    }
   })
 
 

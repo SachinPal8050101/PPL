@@ -117,43 +117,55 @@ app.listen(5000,()=>{
 //Api For LOGIN Page
 
 app.post('/',(req,res)=>{
-  if(req.session.user)
-  {
-    res.send({messages:"LogIn", user:req.session.user})  
-  }
-  else
-  {
-    app.post('/login',(req,res)=>{
-      const {email,password} = req.body
-      User.findOne({email:email},(err,user)=>{
-        if(user){
-            if(password===user.password){
-              res.send({messages:"LogIn", user:user})
-              req.session.user=user;
-            }
-            else{
-          res.send({messages:"Wrong password"})
+  // if(req.session.user)
+  // {
+  //   res.send({messages:"LogIn", user:req.session.user})  
+  // }
+  // else
+  // {
+  //   app.post('/login',(req,res)=>{
+  //     const {email,password} = req.body
+  //     User.findOne({email:email},(err,user)=>{
+  //       if(user){
+  //           if(password===user.password){
+  //             res.send({messages:"LogIn", user:user})
+  //             req.session.user=user;
+  //           }
+  //           else{
+  //         res.send({messages:"Wrong password"})
             
-            }
-        }
-        else{
-          console.log("Email is wrong ")
-        }
-      })
+  //           }
+  //       }
+  //       else{
+  //         console.log("Email is wrong ")
+  //       }
+  //     })
       
-    })
-  }
+  //   })
+  // }
+   jwt.verify(req.body.token,'secretkey',(err,data)=>{
+     if(err)
+     {
+       res.send({status:false})
+       console.log('-------',err)
+     }
+     else{
+       console.log(data)
+     }
+   })
+   
+
+
 })
 
 
 app.post('/login',(req,res)=>{
-
   const {email,password} = req.body
   User.findOne({email:email},(err,user)=>{
     if(user){
         if(password===user.password){
           //res.send({messages:"LogIn", user:user})
-          jwt.sign({user}, 'secretkey', { expiresIn: '30s' }, (err, token) => {
+          jwt.sign({user}, 'secretkey', { expiresIn: '5s' }, (err, token) => {
             res.json({
               token,
               user
@@ -171,25 +183,9 @@ app.post('/login',(req,res)=>{
   })
   
 })
-function verifyToken(req, res, next) {
-  // Get auth header value
-  const bearerHeader = req.body.jsontoken;
-  // Check if bearer is undefined
-  if(typeof bearerHeader !== 'undefined') {
-    // Split at the space
-    const bearer = bearerHeader.split(' ');
-    // Get token from array
-    const bearerToken = bearer[1];
-    // Set the token
-    req.token = bearerToken;
-    // Next middleware
-    next();
-  } else {
-    // Forbidden
-    res.sendStatus(403);
-  }
 
-}
+
+
 
 //Forget password API
 
