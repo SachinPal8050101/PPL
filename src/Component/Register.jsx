@@ -44,14 +44,12 @@ function Register({setLogInUser}) {
           withCredentials: true,
           url: 'http://localhost:5000/register',
         }).then(res=>{
-          console.log(res.data.user)
+          console.log(res)
           setLogInUser(res.data.user)
-          if(res.data.status){
+           localStorage.setItem('LogInUser',JSON.stringify(res.data.user))
+           localStorage.setItem('Token',res.data.token)
             console.log('added')
             history.push('/')
-          }else{
-            console.log('not aded')
-          }
         }) 
       
   }

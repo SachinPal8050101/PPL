@@ -75,8 +75,14 @@ app.post('/register',async (req,res)=>{
                 res.send({status:false,message:'Something Wrong'})
               }
               else{
-                console.log("susses fully connected")
-                res.send({status:true,message:'user Added',user:user})
+                console.log("susses fully connected",user)
+                //res.send({status:true,message:'user Added',user:user})
+                jwt.sign({user}, 'secretkey', { expiresIn: '60s' }, (err, token) => {
+                  res.json({
+                    token,
+                    user
+                  });
+                });
 
                 ///send mail to user of welcome 
                 let transporter = nodemailer.createTransport({
@@ -163,12 +169,12 @@ app.post('/',(req,res)=>{
 
 
 app.post('/login',(req,res)=>{
-  var {email,password} = req.body
+  const {email,password} = req.body
   
   User.findOne({email:email},(err,user)=>{
     bcrypt.compare(password,user.password, function(err, resp) {
         if(resp){
-          //res.send({messages:"LogIn", user:user})
+          
           jwt.sign({user}, 'secretkey', { expiresIn: '60s' }, (err, token) => {
             res.json({
               token,

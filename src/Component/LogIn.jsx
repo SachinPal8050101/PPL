@@ -5,9 +5,7 @@ function LogIn({setLogInUser,LogInData,setLogInData}) {
   localStorage.clear()
   
   let history=useHistory()
-  //  const [LogInData,setLogInUser]=useState({
-  //    emal:
-  //  })
+  
    const handle=(e)=>{
      setLogInData({...LogInData,[e.target.name]:e.target.value})
    } 
