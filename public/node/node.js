@@ -10,6 +10,7 @@ const app=express()
 const session = require('express-session')
 const CookieParser = require('cookie-parser')
 const jwt=require('jsonwebtoken')
+const bcrypt=require('bcrypt')
 
 app.use(express.urlencoded())
 app.use(express.json())
@@ -43,8 +44,10 @@ useUnifiedTopology:true
 
 //API For Registr
 
-app.post('/register',(req,res)=>{
-   const {username,password,email,firstname,lastname}=req.body
+app.post('/register',async (req,res)=>{
+   var {username,password,email,firstname,lastname}=req.body
+   const salt = await bcrypt.genSalt(2);
+   password = await bcrypt.hash(password, salt);
     
    // cheak mail does exit or not 
    emailExistence.check(email, function(err,valid){
@@ -160,10 +163,11 @@ app.post('/',(req,res)=>{
 
 
 app.post('/login',(req,res)=>{
-  const {email,password} = req.body
+  var {email,password} = req.body
+  
   User.findOne({email:email},(err,user)=>{
-    if(user){
-        if(password===user.password){
+    bcrypt.compare(password,user.password, function(err, resp) {
+        if(resp){
           //res.send({messages:"LogIn", user:user})
           jwt.sign({user}, 'secretkey', { expiresIn: '60s' }, (err, token) => {
             res.json({
@@ -173,13 +177,12 @@ app.post('/login',(req,res)=>{
           });
         }
         else{
-      res.send({messages:"Wrong password"})
+        res.send({messages:"Wrong password"})
         
         }
-    }
-    else{
-      console.log("Email is wrong ")
-    }
+    
+    
+  });
   })
   
 })
@@ -222,6 +225,7 @@ app.post('/uploadpostcontent',(req,res)=>{
     return res.status(400).send('No files were uploaded.');
   }
   var sampleFile = req.files.image;
+  console.log('pppppppp',sampleFile)
 fs.readFile(sampleFile.path, function(err, data){
   var path = '../post_images' + '/' + sampleFile.name;
   fs.writeFile(path, data, function(err) {
