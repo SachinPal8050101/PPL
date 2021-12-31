@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect ,useRef} from 'react'
 import Post from './Post'
 import FeaturesBar from './FeaturesBar'
 import UploadPost from './UploadPost'
@@ -29,6 +29,11 @@ function Home(props) {
   //     history.push('./login')
   //   }
   // }, [])
+
+  axios.interceptors.request.use((req)=>{
+    console.log('hhhhhhhhhh',req);
+    return req;
+  })
 
   return (
     <>

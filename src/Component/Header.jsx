@@ -1,8 +1,9 @@
-import React, { useContext } from 'react'
+import React, { useContext,useRef } from 'react'
 import { useState, useEffect } from 'react'
 import { MyContext } from '../App'
 import { Link } from 'react-router-dom'
 function Header() {
+  
   const user = useContext(MyContext)
   {
     console.log('hello' + JSON.stringify(user))
@@ -42,7 +43,7 @@ function Header() {
           <div className="flag_div">
             <img src="images/flag.png" />
           </div>
-          <input type="text" placeholder="Search" className="txt_box" />
+          <input   type="text" placeholder="Search" className="txt_box" />
           <div className="msg_box">
             <a href="#">
               <span className="msg_count">100</span>

@@ -18,7 +18,6 @@ function ForgotPassword() {
       url: 'http://localhost:5000/forgotEmail',
     }).then((res) => { 
       if (res.data.status){
-       
         console.log(res.data.data._id)
         history.push(`/resetPassword/${res.data.data._id}`)
       } else {

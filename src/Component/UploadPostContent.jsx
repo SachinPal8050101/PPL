@@ -19,6 +19,7 @@ function UploadPostContent() {
     let formdata = new FormData(e.target)
     formdata.append('userId', JSON.parse(localStorage.getItem('LogInUser'))._id)
     formdata.append('fullName',JSON.parse(localStorage.getItem('LogInUser')).firstname+" "+JSON.parse(localStorage.getItem('LogInUser')).lastname)
+    console.log('foooooooo',formdata)
     axios({
       method: 'POST',
       data: formdata,
