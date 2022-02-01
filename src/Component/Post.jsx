@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import axios from 'axios'
+import config from '../cofig'
 function Post(props) {
   let history = useHistory()
   useEffect(() => {
@@ -19,7 +20,7 @@ function Post(props) {
       const getData = () =>
         axios({
           method: 'post',
-          url: 'http://localhost:5000/getPost',
+          url: `${config.SERVER_URL}/getPost`,
           data: { skip: skip },
         }).then((result) => {
           props.setresultAllPost(result.data)
@@ -31,10 +32,10 @@ function Post(props) {
   const getData = () =>
     axios({
       method: 'post',
-      url: 'http://localhost:5000/getPost',
+      url: `${config.SERVER_URL}/getPost`,
     }).then((result) => {
       props.setresultAllPost(result.data)
-    })
+    }).catch(err=>console.log('dfghjk--------',err))
 
   /// code for likes
   var valForLike = false
@@ -53,7 +54,7 @@ function Post(props) {
     }
     axios({
       method: 'Post',
-      url: 'http://localhost:5000/like',
+      url: `${config.SERVER_URL}/like`,
       data: { postId, userId },
     }).then((result) => {
       props.setresultAllPost(result.data)
@@ -74,7 +75,7 @@ function Post(props) {
     }
     axios({
       method: 'Post',
-      url: 'http://localhost:5000/unlike',
+      url: `${config.SERVER_URL}/unlike`,
       data: { postId, userId },
     }).then((result) => {
       props.setresultAllPost(result.data)
@@ -83,7 +84,7 @@ function Post(props) {
 
   return (
     <>
-      {props.resultAllPost.length !== 0
+      {props.resultAllPost?.length !== 0
         ? props.resultAllPost.map((val) => (
             <div className="contnt_2">
               <div className="div_a">
@@ -155,7 +156,7 @@ function Post(props) {
                             JSON.parse(localStorage.getItem('LogInUser'))._id
                           }`}
                         >
-                          {val.like.length}
+                          {val?.like?.length}
                         </span>
                         <span className="rit_cnt" />
                       </div>

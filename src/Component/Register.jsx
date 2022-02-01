@@ -2,6 +2,7 @@ import React from 'react'
 import {Link,useHistory} from 'react-router-dom'
 import {useState,useEffect} from 'react'
 import axios from 'axios'
+import config from '../cofig'
 function Register({setLogInUser}) {
   let history=useHistory()
   const [RegisterData,setRegisterData] =useState({
@@ -42,7 +43,7 @@ function Register({setLogInUser}) {
           method: "POST",
           data: RegisterData,
           withCredentials: true,
-          url: 'http://localhost:5000/register',
+          url:`${config.SERVER_URL}/register`,
         }).then(res=>{
           console.log(res)
           setLogInUser(res.data.user)

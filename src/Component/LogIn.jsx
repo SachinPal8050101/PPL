@@ -1,11 +1,11 @@
 import React,{useState,useEffect} from 'react'
 import {Link,useHistory} from 'react-router-dom'
 import axios from 'axios'
+import config from '../cofig'
 function LogIn({setLogInUser,LogInData,setLogInData}) {
   localStorage.clear()
-  
   let history=useHistory()
-  
+  console.log('oiuytrtyu')
    const handle=(e)=>{
      setLogInData({...LogInData,[e.target.name]:e.target.value})
    } 
@@ -15,7 +15,7 @@ function LogIn({setLogInUser,LogInData,setLogInData}) {
       method:"POST",
       data: LogInData,
       withCredentials: true,
-      url: 'http://localhost:5000/login',
+      url: `${config.SERVER_URL}/login`,
     }).then(res=>{
       alert(res.data.messages)
       setLogInUser(res.data.user)

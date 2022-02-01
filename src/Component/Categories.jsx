@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState } from 'react'
 import axios from 'axios'
+import config from '../cofig'
 function Categories(props) {
   const [category, setcategory] = useState([])
 
@@ -10,7 +11,7 @@ function Categories(props) {
       method: 'post',
       data: { search: val },
       withCredentials: true,
-      url: 'http://localhost:5000/filterPost',
+      url: `${config.SERVER_URL}/filterPost`,
     })
       .then((result) => {
         props.setresultAllPost(result.data)

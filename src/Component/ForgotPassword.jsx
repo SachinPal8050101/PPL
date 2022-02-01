@@ -15,7 +15,7 @@ function ForgotPassword() {
       method: 'POST',
       data: {forgotEmail:forgotEmail,location:location},
       withCredentials: true,
-      url: 'http://localhost:5000/forgotEmail',
+      url: 'SERVER_URL/forgotEmail',
     }).then((res) => { 
       if (res.data.status){
         console.log(res.data.data._id)

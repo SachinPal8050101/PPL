@@ -2,6 +2,7 @@ import React from 'react'
 import {useState} from 'react'
 import axios from 'axios'
 import {Link,useHistory,useParams} from 'react-router-dom'
+import config from '../cofig'
 function ResetPassword({setLogInData,setLogInUser}){
   let history=useHistory()
   const { id } = useParams();
@@ -22,7 +23,7 @@ function ResetPassword({setLogInData,setLogInUser}){
        {
            axios({
              method:'post',
-             url:'http://localhost:5000/resetpassword',
+             url:`${config.SERVER_URL}/resetpassword`,
              data:{id:id,forgotPassword:forgotPassword.fpassword}
            }).then((res)=>{
             console.log(res.data.data)

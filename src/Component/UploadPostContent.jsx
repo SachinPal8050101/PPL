@@ -2,6 +2,7 @@ import React, { useContext } from 'react'
 import { useState } from 'react'
 import axios from 'axios'
 import './Uploadpostcontent.css'
+import config from '../cofig'
 function UploadPostContent() {
   const userId = JSON.parse(localStorage.getItem('LogInUser'))._id
   const [postData, setpostData] = useState({
@@ -24,7 +25,7 @@ function UploadPostContent() {
       method: 'POST',
       data: formdata,
       withCredentials: true,
-      url: 'http://localhost:5000/UploadPostContent',
+      url: `${config.SERVER_URL}/UploadPostContent`,
       config: { headers: { 'Content-Type': 'multipart/form-data' } },
     }).then((res) => {
       if (res.data.status) {

@@ -6,13 +6,14 @@ import Categories from './Categories'
 import Features from './Features'
 import { useHistory, Link } from 'react-router-dom'
 import axios from 'axios'
+import config from '../cofig'
 function Home(props) {
   let history = useHistory()
    
   axios({
     method:"post",
     data:{'token':localStorage.getItem('Token')},
-    url:'http://localhost:5000/'
+    url:`${config.SERVER_URL}/`
   }).then((res)=>{
     if(!res.data.status)
     {
